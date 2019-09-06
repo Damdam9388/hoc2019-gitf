@@ -33,13 +33,29 @@ class IndexController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contact);
             $entityManager->flush();
-
-            //Rediriger vers une page de confirmation
+            
+            // Ajout d'un message à la session
+            // https://symfony.com/doc/current/controller.html#flash-messages 
+            $this->addFlash(
+                "success",
+                "Votre message a bien été envoyé, merci"
+            );
+            // Redirection vers une page affichant les messages flash
+            return $this->redirectToRoute('display_flash');
         }
         
         return $this->render(
             'index/contact.html.twig',
             ['contactForm' => $form->createView()]
         );
+    }
+    /**
+     * @Route("/display/message", name="display_flash")
+     *
+     * @return void
+     */
+    public function flash()
+    {
+        return $this->render("index/flash.html.twig");
     }
 }
